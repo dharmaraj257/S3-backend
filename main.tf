@@ -15,7 +15,7 @@ terraform {
 }
 
 
-resource "aws_vpc" "default" {
+resource "aws_vpc" "default-1" {
   cidr_block           = var.vpc_cidr
   enable_dns_hostnames = true
   tags = {
@@ -25,14 +25,14 @@ resource "aws_vpc" "default" {
 }
 
 resource "aws_internet_gateway" "default" {
-  vpc_id = aws_vpc.default.id
+  vpc_id = aws_vpc.default-1.id
   tags = {
     Name = "${var.IGW_name}"
   }
 }
 
 resource "aws_subnet" "subnet1-public" {
-  vpc_id            = aws_vpc.default.id
+  vpc_id            = aws_vpc.default-1.id
   cidr_block        = var.public_subnet1_cidr
   availability_zone = "us-east-1a"
 
@@ -64,7 +64,7 @@ resource "aws_subnet" "subnet1-public" {
 
 
 resource "aws_route_table" "terraform-public" {
-  vpc_id = aws_vpc.default.id
+  vpc_id = aws_vpc.default-1.id
 
   route {
     cidr_block = "0.0.0.0/0"
@@ -84,7 +84,7 @@ resource "aws_route_table_association" "terraform-public" {
 resource "aws_security_group" "allow_all" {
   name        = "allow_all"
   description = "Allow all inbound traffic"
-  vpc_id      = aws_vpc.default.id
+  vpc_id      = aws_vpc.default-1.id
 
   ingress {
     from_port   = 0
